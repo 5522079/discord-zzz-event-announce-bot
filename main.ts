@@ -22,8 +22,8 @@ const bot = createBot({
 
             if (preDeployId !== currDeployId) {
                 console.log("🔎 Deploy ID has been changed. Sending event notification...");
-                let events = await loadEventData();
-                const description = events.map(event => formatEventSummary(event)).join("\n\n");
+                let tmp = await loadEventData();
+                const description = tmp.map(event => formatEventSummary(event)).join("\n\n");
                 await sendMessage(bot, notifyChannel.id, { 
                     embeds: [{
                         title: "イベント情報更新",
