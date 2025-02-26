@@ -25,6 +25,7 @@ def extract_event_info(text):
     event_name = text.split("【参加条件】")[0].strip()  # イベント名
     match = re.search(r'【開催期間】\s*([\d/].*?)(?:【イベント報酬】|$)', text)  # 開催期間
     event_period = match.group(1).strip() if match else "不明"
+    event_period = event_period.replace("アプデ後 ", "")
     return event_name, event_period
 
 # imgのsrcを取得
@@ -61,7 +62,7 @@ for div in divss:
         if cnt == 0:
             new_data.append([event_name, event_period, img_src, event_link])
         else:
-            new_data.append(["【開催予定】" + event_name, event_period, img_src, event_link])
+            new_data.append(["【予定】" + event_name, event_period, img_src, event_link])
     
     cnt += 1
 
