@@ -28,7 +28,6 @@ const bot = createBot({
                     embeds: [{
                         title: "イベント情報更新",
                         description: description,
-                        color: 0xEE7800,
                     }],
                 });
                 await kv.set(["deploy", "id"], currDeployId);
@@ -110,10 +109,6 @@ const handleEventCommand = async (interaction, category, type) => {
     if (category === "開催予定") events = events.filter(e => e["イベント名"].includes('【予定】'));
     
     if (type === "詳細") {
-        await bot.helpers.sendInteractionResponse(interaction.id, interaction.token, {
-            type: 4,
-            data: { content: "イベント情報を取得中です..." },
-        });
         for (const event of events) {
             await sendMessage(bot, interaction.channelId, { embeds: [createEventEmbed(event)] });
         }
@@ -131,6 +126,7 @@ const createEventEmbed = (event) => ({
 });
 
 const formatEventSummary = (event) => `**${getEmoji(event["イベント名"])}${event["イベント名"]}${getEmoji(event["イベント名"])}**\n🗓️ **期間**: __\`${event["開催期間"]}\`__\n${event["詳細URL"] ? `${getEmoji("gamewith")} **詳細**: [gamewith](${event["詳細URL"]})` : ''}`;
+
 const sendInteractionResponse = async (interaction, title, description, color) => {
     const embed = { title, description, color };
     await bot.helpers.sendInteractionResponse(interaction.id, interaction.token, { type: 4, data: { embeds: [embed] } });
