@@ -109,6 +109,7 @@ const handleEventCommand = async (interaction, category, type) => {
     if (category === "開催予定") events = events.filter(e => e["イベント名"].includes('【予定】'));
     
     if (type === "詳細") {
+        await sendMessage(bot, interaction.channelId, { content: "イベント情報を取得中です..." });
         for (const event of events) {
             await sendMessage(bot, interaction.channelId, { embeds: [createEventEmbed(event)] });
         }
