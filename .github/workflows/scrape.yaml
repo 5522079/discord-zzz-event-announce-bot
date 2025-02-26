@@ -1,0 +1,46 @@
+name: scrape
+
+on:
+  workflow_dispatch: # 手動実行
+  schedule:
+    - cron: "34 17 * * *" # 負荷軽減のため 2:34（JST）
+
+jobs:
+  Scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run scraping script
+        run: |
+          python scrape.py
+
+      - name: git config
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: check status
+        run: |
+          git status
+          if git diff --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+      - name: commit and push
+        run: |
+          git add .
+          git commit -m 'update'
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main

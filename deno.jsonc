@@ -1,0 +1,10 @@
+{
+    "lock": false,
+    "tasks": {
+        "start": "deno run -A --watch ./main.ts"
+    },
+    "imports": {
+        "$std/": "https://deno.land/std@0.224.0/",
+        "@discordeno/": "https://deno.land/x/discordeno@18.0.0/"
+    }
+}
