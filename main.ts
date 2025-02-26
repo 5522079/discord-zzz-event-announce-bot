@@ -26,7 +26,7 @@ const bot = createBot({
                 const description = events.map(event => formatEventSummary(event)).join("\n\n");
                 await sendMessage(bot, notifyChannel.id, { 
                     embeds: [{
-                        title: "イベント情報更新のお知らせ",
+                        title: "イベント情報更新",
                         description: description,
                         color: 0xEE7800,
                     }],
@@ -106,8 +106,8 @@ const getEmoji = (eventName = "") => {
 
 const handleEventCommand = async (interaction, category, type) => {
     let events = await loadEventData();
-    if (category === "開催中") events = events.filter(e => !e["イベント名"].includes('【開催予定】'));
-    if (category === "開催予定") events = events.filter(e => e["イベント名"].includes('【開催予定】'));
+    if (category === "開催中") events = events.filter(e => !e["イベント名"].includes('【予定】'));
+    if (category === "開催予定") events = events.filter(e => e["イベント名"].includes('【予定】'));
     
     if (type === "詳細") {
         await bot.helpers.sendInteractionResponse(interaction.id, interaction.token, {
@@ -125,13 +125,12 @@ const handleEventCommand = async (interaction, category, type) => {
 
 const createEventEmbed = (event) => ({
     title: `${getEmoji(event["イベント名"])}${event["イベント名"]}${getEmoji(event["イベント名"])} `,
-    description: `🗓️ **期間**: \`${event["開催期間"]}\`\n${event["詳細URL"] ? `✅ **詳細**: ${getEmoji("gamewith")} ${event["詳細URL"]}` : ''}`,
-    color: event["イベント名"].includes('【開催予定】') ? 0x777777 : 0xEE7800,
+    description: `🗓️ **期間**: __\`${event["開催期間"]}\`__\n${event["詳細URL"] ? `${getEmoji("gamewith")} **詳細**: [gamewith](${event["詳細URL"]})` : ''}`,
+    color: event["イベント名"].includes('【予定】') ? 0x777777 : 0xEE7800,
     image: event["画像URL"] ? { url: event["画像URL"] } : undefined,
 });
 
-const formatEventSummary = (event) => `**${getEmoji(event["イベント名"])}${event["イベント名"]}${getEmoji(event["イベント名"])}**\n🗓️ **期間**: \`${event["開催期間"]}\`\n${event["詳細URL"] ? `✅ **詳細**: ${getEmoji("gamewith")} ${event["詳細URL"]}` : ''}`;
-
+const formatEventSummary = (event) => `**${getEmoji(event["イベント名"])}${event["イベント名"]}${getEmoji(event["イベント名"])}**\n🗓️ **期間**: __\`${event["開催期間"]}\`__\n${event["詳細URL"] ? `${getEmoji("gamewith")} **詳細**: [gamewith](${event["詳細URL"]})` : ''}`;
 const sendInteractionResponse = async (interaction, title, description, color) => {
     const embed = { title, description, color };
     await bot.helpers.sendInteractionResponse(interaction.id, interaction.token, { type: 4, data: { embeds: [embed] } });
