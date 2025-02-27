@@ -3,7 +3,7 @@ name: scrape
 on:
   workflow_dispatch: # 手動実行
   schedule:
-    - cron: "34 17 * * *" # 負荷軽減のため 2:34（JST）
+    - cron: "0 20 * * *" # 5:00（JST）
 
 jobs:
   Scrape:
@@ -31,15 +31,19 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: check status
+      - name: check for changes
+        id: check_changes
         run: |
           git status
           if git diff --quiet; then
             echo "No changes to commit."
-            exit 0
+            echo "changed=false" >> $GITHUB_ENV
+          else
+            echo "changed=true" >> $GITHUB_ENV
           fi
 
       - name: commit and push
+        if: env.changed == 'true'
         run: |
           git add .
           git commit -m 'update'
