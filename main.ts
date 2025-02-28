@@ -22,16 +22,9 @@ const bot = createBot({
 
             if (preDeployId !== currDeployId) {
                 console.log("🔎 Deploy ID has been changed. Sending event notification...");
-                let tmp = await loadEventData();
-                const description = tmp.map(event => formatEventSummary(event)).join("\n\n");
-                await sendMessage(bot, notifyChannel.id, { 
-                    embeds: [{
-                        title: "イベント情報更新",
-                        description: description,
-                    }],
-                });
+                await sendMessage(bot, notifyChannel.id, { content: "イベント情報が更新されました。" });
                 await kv.set(["deploy", "id"], currDeployId);
-            } 
+            }
 
             editBotStatus(bot, {
                 status: "online",
