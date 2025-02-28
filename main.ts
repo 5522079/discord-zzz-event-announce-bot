@@ -22,7 +22,9 @@ const bot = createBot({
 
             if (preDeployId !== currDeployId) {
                 console.log("🔎 Deploy ID has been changed. Sending event notification...");
-                await sendMessage(bot, notifyChannel.id, { content: "イベント情報が更新されました。" });
+                const rnd_nums = [Math.floor(Math.random() * 3) + 1, Math.floor(Math.random() * 2), Math.floor(Math.random() * 3)];
+                const message = 'ンナ'.repeat(rnd_nums[0]) + '！'.repeat(rnd_nums[0]) + 'ンナナ'.repeat(rnd_nums[1]) + '！'.repeat(rnd_nums[1]);
+                await sendMessage(bot, notifyChannel.id, { content: message });
                 await kv.set(["deploy", "id"], currDeployId);
             }
 
